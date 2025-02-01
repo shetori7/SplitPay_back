@@ -1,0 +1,11 @@
+services:
+  mysql:
+    build: ./mySQL
+    container_name: quarkus-mysql-container
+    ports:
+      - "3306:3306"
+  nginx:
+    build: ./nginx
+    container_name: quarkus-nginx-container
+    ports:
+      - "80:80"
