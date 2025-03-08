@@ -10,13 +10,8 @@ import (
 // LoadEnv は環境変数を読み込む
 // プロファイルに応じた.envファイルを読み込む
 func LoadEnv(profile string) error {
-	var envFile string
 
-	// プロファイルに応じて設定ファイルを決定
-	if profile == "" {
-		profile = "dev" // デフォルトプロファイル
-	}
-	envFile = profile + ".env" // 例: dev.env、prod.env
+	var envFile string = profile + ".env"
 
 	// 環境変数をロードする
 	if err := godotenv.Load(envFile); err != nil {
