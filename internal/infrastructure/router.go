@@ -46,10 +46,13 @@ func Init() {
 		c.JSON(http.StatusOK, users)
 	})
 
+	e.GET("/group/:id", func(c *gin.Context) {
+		groupID := c.Param("id")
+		c.JSON(http.StatusOK, gin.H{
+			"message":  "Group ID received",
+			"group_id": groupID,
+		})
+	})
+
 	e.Run(":8000")
-	// e.GET("/users", func(c gin.Context) {
-	// 	users := userController.GetUser()
-	// 	c.Bind(&users)
-	// 	return c.JSON(http.StatusOK, users)
-	// })
 }
