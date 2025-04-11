@@ -6,7 +6,7 @@ type GroupRepository struct {
 	SqlHandler
 }
 
-func (db *GroupRepository) Store(g domain.Wari_group) {
+func (db *GroupRepository) Store(g *domain.Wari_group) {
 	db.Create(&g)
 }
 

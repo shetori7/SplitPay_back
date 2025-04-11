@@ -5,7 +5,7 @@ import (
 )
 
 type GroupRepository interface {
-	Store(domain.Wari_group)
+	Store(*domain.Wari_group)
 	Select() []domain.Wari_group
 	Delete(id string)
 }

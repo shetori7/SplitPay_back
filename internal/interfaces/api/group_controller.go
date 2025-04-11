@@ -41,8 +41,11 @@ func (controller *GroupController) Create(c *gin.Context) {
 	g := domain.Wari_group{
 		GroupName: reqBody.GroupName,
 	}
-	groupUuid := controller.Interactor.Add(g)
+	controller.Interactor.Add(&g)
 	c.JSON(http.StatusOK, gin.H{
-		"groupUuid": groupUuid,
+		"groupUuid": g.GroupUuid,
+		"groupName": g.GroupName,
+		"groupId":   g.GroupId,
+		"message":   "group created successfully",
 	})
 }

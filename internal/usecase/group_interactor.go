@@ -10,11 +10,10 @@ type GroupInteractor struct {
 	GroupRepository GroupRepository
 }
 
-func (interactor *GroupInteractor) Add(g domain.Wari_group) string {
+func (interactor *GroupInteractor) Add(g *domain.Wari_group) {
 	newUUID := uuid.New().String()
 	g.GroupUuid = newUUID
 	interactor.GroupRepository.Store(g)
-	return newUUID
 }
 
 func (interactor *GroupInteractor) GetInfo() []domain.Wari_group {
