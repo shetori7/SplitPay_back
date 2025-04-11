@@ -22,7 +22,7 @@ func NewUserController(sqlHandler database.SqlHandler) *UserController {
 	}
 }
 
-func (controller *UserController) Create(c gin.Context) {
+func (controller *UserController) Create(c *gin.Context) {
 	u := domain.Wari_user{}
 	c.Bind(&u)
 	controller.Interactor.Add(u)

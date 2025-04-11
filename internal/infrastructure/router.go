@@ -55,27 +55,11 @@ func Init() {
 		})
 	})
 
-	//TODO：リクエストの構造体はここで持ってるでいいのか？
-	type RequestBody struct {
-		GroupID string   `json:"group_id"`
-		Users   []string `json:"users"`
-	}
+	//TODO:ContlloerをNewする所はまとめたほうがいいかも
+	groupController := controllers.NewGroupController(NewSqlHandler(cfg))
 
 	e.POST("/group/new", func(c *gin.Context) {
-		var reqBody RequestBody
-
-		if err := c.ShouldBindJSON(&reqBody); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{
-				"error": err.Error(),
-			})
-			return
-		}
-
-		c.JSON(http.StatusOK, gin.H{
-			"message": "received array",
-			"GroupID": reqBody.GroupID,
-			"Users":   reqBody.Users,
-		})
+		groupController.Create(c)
 	})
 
 	e.Run(":8000")
