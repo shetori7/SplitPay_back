@@ -5,7 +5,7 @@ import (
 )
 
 type UserRepository interface {
-	Store(domain.Wari_user)
+	Store(*domain.Wari_user)
 	Select() []domain.Wari_user
 	Delete(id string)
 }

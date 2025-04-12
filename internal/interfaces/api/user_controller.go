@@ -25,10 +25,21 @@ func NewUserController(sqlHandler database.SqlHandler) *UserController {
 func (controller *UserController) Create(c *gin.Context) {
 	u := domain.Wari_user{}
 	c.Bind(&u)
-	controller.Interactor.Add(u)
+	controller.Interactor.Add(&u)
 	createdUsers := controller.Interactor.GetInfo()
 	c.JSON(201, createdUsers)
-	return
+}
+
+func (controller *UserController) CreateMultiple(userList []string, groupId int) []domain.Wari_user {
+	users := make([]domain.Wari_user, len(userList))
+	for i, userName := range userList {
+		users[i] = domain.Wari_user{UserName: userName, GroupId: groupId}
+	}
+
+	for _, user := range users {
+		controller.Interactor.Add(&user)
+	}
+	return users
 }
 
 func (controller *UserController) GetUser() []domain.Wari_user {

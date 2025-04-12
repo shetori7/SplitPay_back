@@ -6,7 +6,7 @@ type UserInteractor struct {
 	UserRepository UserRepository
 }
 
-func (interactor *UserInteractor) Add(u domain.Wari_user) {
+func (interactor *UserInteractor) Add(u *domain.Wari_user) {
 	interactor.UserRepository.Store(u)
 }
 

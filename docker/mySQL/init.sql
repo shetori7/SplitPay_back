@@ -12,10 +12,9 @@ CREATE TABLE IF NOT EXISTS wari_groups (
 
 -- ユーザーテーブル
 CREATE TABLE IF NOT EXISTS wari_users (
-    user_id INT AUTO_INCREMENT,
+    user_id INT AUTO_INCREMENT PRIMARY KEY,
     group_id INT,
     user_name VARCHAR(50) NOT NULL,
-    PRIMARY KEY (user_id, group_id),
     FOREIGN KEY (group_id) REFERENCES wari_groups(group_id),
     user_created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     user_updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP

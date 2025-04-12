@@ -8,6 +8,9 @@ import (
 	"os"
 
 	controllers "SplitPay_back/internal/interfaces/api"
+	//internal/domain/interfaces/requestをインポートする分を書いて
+
+	"SplitPay_back/internal/infrastructure/request"
 
 	"github.com/gin-gonic/gin"
 )
@@ -59,7 +62,22 @@ func Init() {
 	groupController := controllers.NewGroupController(NewSqlHandler(cfg))
 
 	e.POST("/group/new", func(c *gin.Context) {
-		groupController.Create(c)
+		var reqBody request.GraoupNewRequestBody
+		if err := c.ShouldBindJSON(&reqBody); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+		g := groupController.Create(reqBody.GroupName)
+		users := userController.CreateMultiple(reqBody.Users, g.GroupId)
+		c.JSON(http.StatusOK, gin.H{
+			"groupUuid": g.GroupUuid,
+			"groupName": g.GroupName,
+			"groupId":   g.GroupId,
+			"message":   "group created successfully",
+			"users":     users,
+		})
 	})
 
 	e.Run(":8000")

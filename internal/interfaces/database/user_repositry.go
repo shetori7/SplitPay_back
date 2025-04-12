@@ -6,7 +6,7 @@ type UserRepository struct {
 	SqlHandler
 }
 
-func (db *UserRepository) Store(u domain.Wari_user) {
+func (db *UserRepository) Store(u *domain.Wari_user) {
 	db.Create(&u)
 }
 
