@@ -7,7 +7,7 @@ type UserRepository struct {
 }
 
 func (db *UserRepository) Store(u *domain.Wari_user) {
-	db.Create(&u)
+	db.Create(u)
 }
 
 func (db *UserRepository) Select() []domain.Wari_user {

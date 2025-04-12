@@ -36,8 +36,8 @@ func (controller *UserController) CreateMultiple(userList []string, groupId int)
 		users[i] = domain.Wari_user{UserName: userName, GroupId: groupId}
 	}
 
-	for _, user := range users {
-		controller.Interactor.Add(&user)
+	for i := range users {
+		controller.Interactor.Add(&users[i])
 	}
 	return users
 }
