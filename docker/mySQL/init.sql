@@ -41,8 +41,6 @@ CREATE TABLE IF NOT EXISTS wari_loans (
     FOREIGN KEY (user_id) REFERENCES wari_users(user_id),
 );
 
-
-
 -- データの初期化
 INSERT INTO wari_groups (group_name,group_uuid) VALUES ('group1', 'uuid1');
 INSERT INTO wari_users (group_id, user_name) VALUES (1, 'user1');
