@@ -18,6 +18,9 @@ CREATE TABLE IF NOT EXISTS wari_users (
     FOREIGN KEY (group_id) REFERENCES wari_groups(group_id),
     user_created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     user_updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    wari_loans_from_user_id INT,
+    FOREIGN KEY (wari_loans_from_user_id) REFERENCES wari_users(user_id)
+    wari_loans_amount DECIMAL(10, 2) NOT NULL,
 );
 
 -- 支払いのテーブル（誰がいくら払ったか）
