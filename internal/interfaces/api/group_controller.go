@@ -2,8 +2,12 @@ package controllers
 
 import (
 	"SplitPay_back/internal/domain"
+	"SplitPay_back/internal/infrastructure/request"
 	"SplitPay_back/internal/interfaces/database"
 	"SplitPay_back/internal/usecase"
+	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 type GroupController struct {
@@ -20,10 +24,17 @@ func NewGroupController(sqlHandler database.SqlHandler) *GroupController {
 	}
 }
 
-func (controller *GroupController) Create(groupname string) domain.Wari_group {
+func (controller *GroupController) Create(c *gin.Context) domain.Wari_group {
 	g := domain.Wari_group{}
-	g.GroupName = groupname
-
+	var reqBody request.GraoupNewRequestBody
+	if err := c.ShouldBindJSON(&reqBody); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return g
+	}
+	c.Set("request", reqBody)
+	g.GroupName = reqBody.GroupName
 	controller.Interactor.Add(&g)
 	return g
 }

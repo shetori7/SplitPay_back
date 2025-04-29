@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"SplitPay_back/internal/domain"
+	"SplitPay_back/internal/infrastructure/request"
 	"SplitPay_back/internal/interfaces/database"
 	"SplitPay_back/internal/usecase"
 
@@ -30,7 +31,12 @@ func (controller *UserController) Create(c *gin.Context) {
 	c.JSON(201, createdUsers)
 }
 
-func (controller *UserController) CreateMultiple(userList []string, groupId int) []domain.Wari_user {
+func (controller *UserController) CreateMultiple(c *gin.Context, groupId int) []domain.Wari_user {
+	var reqBody request.GraoupNewRequestBody
+	if value, exists := c.Get("request"); exists {
+		reqBody = value.(request.GraoupNewRequestBody)
+	}
+	userList := reqBody.Users
 	users := make([]domain.Wari_user, len(userList))
 	for i, userName := range userList {
 		users[i] = domain.Wari_user{UserName: userName, GroupId: groupId}

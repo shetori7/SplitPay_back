@@ -8,9 +8,6 @@ import (
 	"os"
 
 	controllers "SplitPay_back/internal/interfaces/api"
-	//internal/domain/interfaces/requestをインポートする分を書いて
-
-	"SplitPay_back/internal/infrastructure/request"
 
 	"github.com/gin-gonic/gin"
 )
@@ -41,7 +38,10 @@ func Init() {
 		})
 	})
 
+	//Controllerを作成
 	userController := controllers.NewUserController(NewSqlHandler(cfg))
+	groupController := controllers.NewGroupController(NewSqlHandler(cfg))
+	paymentController := controllers.NewPaymentController(NewSqlHandler(cfg))
 
 	e.GET("/users", func(c *gin.Context) {
 		users := userController.GetUser()
@@ -49,28 +49,10 @@ func Init() {
 		c.JSON(http.StatusOK, users)
 	})
 
-	//sample
-	e.GET("/group/:id", func(c *gin.Context) {
-		groupID := c.Param("id")
-		c.JSON(http.StatusOK, gin.H{
-			"message":  "Group ID received",
-			"group_id": groupID,
-		})
-	})
-
-	//TODO:ContlloerをNewする所はまとめたほうがいいかも
-	groupController := controllers.NewGroupController(NewSqlHandler(cfg))
-
 	e.POST("/group/new", func(c *gin.Context) {
-		var reqBody request.GraoupNewRequestBody
-		if err := c.ShouldBindJSON(&reqBody); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{
-				"error": err.Error(),
-			})
-			return
-		}
-		g := groupController.Create(reqBody.GroupName)
-		users := userController.CreateMultiple(reqBody.Users, g.GroupId)
+		//TODO:リクエストとdomainのマッピング箇所をひとまとめにしたい
+		g := groupController.Create(c)
+		users := userController.CreateMultiple(c, g.GroupId)
 		c.JSON(http.StatusOK, gin.H{
 			"groupUuid": g.GroupUuid,
 			"groupName": g.GroupName,
@@ -78,6 +60,10 @@ func Init() {
 			"message":   "group created successfully",
 			"users":     users,
 		})
+	})
+
+	e.POST(("/payment/new"), func(c *gin.Context) {
+		paymentController.Create(c)
 	})
 
 	e.Run(":8000")

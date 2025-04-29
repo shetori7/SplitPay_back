@@ -29,6 +29,10 @@ func (handler *SqlHandler) Create(obj interface{}) {
 	handler.db.Create(obj)
 }
 
+func (handler *SqlHandler) FindById(obj interface{}, id int) {
+	handler.db.Where("id = ?", id).Find(obj)
+}
+
 func (handler *SqlHandler) FindAll(obj interface{}) {
 	handler.db.Find(obj)
 }
