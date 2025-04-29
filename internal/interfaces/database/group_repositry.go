@@ -15,6 +15,7 @@ func (db *GroupRepository) Select() []domain.Wari_group {
 	db.FindAll(&group)
 	return group
 }
+
 func (db *GroupRepository) Delete(id string) {
 	group := []domain.Wari_user{}
 	db.DeleteById(&group, id)
