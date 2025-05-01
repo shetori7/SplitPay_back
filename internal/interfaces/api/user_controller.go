@@ -53,6 +53,6 @@ func (controller *UserController) GetUser() []domain.Wari_user {
 	return res
 }
 
-func (controller *UserController) Delete(id string) {
+func (controller *UserController) Delete(id int) {
 	controller.Interactor.Delete(id)
 }

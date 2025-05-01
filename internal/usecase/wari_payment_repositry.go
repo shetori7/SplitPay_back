@@ -2,11 +2,13 @@ package usecase
 
 import (
 	"SplitPay_back/internal/domain"
+	"SplitPay_back/internal/interfaces/database/dto"
 )
 
 type WariPaymentRepository interface {
 	Store(*domain.Wari_payment)
 	SelectByGroupId(groupId int) []domain.Wari_payment
 	Select() []domain.Wari_payment
-	Delete(id string)
+	Delete(id int) error
+	SelectPaymentAndLoanByGroupId(groupId int) []dto.ReCalcFinalPaymentDto
 }

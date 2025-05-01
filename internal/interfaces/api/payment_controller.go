@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/hashicorp/go-multierror"
 )
 
 type PaymentContlloer struct {
@@ -27,6 +28,7 @@ func NewPaymentController(sqlHandler database.SqlHandler) *PaymentContlloer {
 }
 
 func (controller *PaymentContlloer) Create(c *gin.Context) {
+	var errors error
 	var reqBody request.PaymentNewRequestBody
 	if err := c.ShouldBindJSON(&reqBody); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -35,18 +37,19 @@ func (controller *PaymentContlloer) Create(c *gin.Context) {
 		return
 	}
 
-	err := controller.Interactor.Add(reqBody.GroupId, reqBody.PayerId, reqBody.Amount, reqBody.ParticipantIds)
-	controller.Interactor.ReCalcFinalPayment(reqBody.GroupId)
+	addErr := controller.Interactor.Add(reqBody.GroupId, reqBody.PayerId, reqBody.Amount, reqBody.ParticipantIds)
+	errors = multierror.Append(errors, addErr)
+	reCalcErr := controller.Interactor.ReCalcFinalPayment(reqBody.GroupId)
+	errors = multierror.Append(errors, reCalcErr)
 
-	if err != nil {
+	if finalErr := errors.(*multierror.Error).ErrorOrNil(); finalErr != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": err.Error(),
-		})
-		return
-	} else {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "Payment created successfully",
+			"error": finalErr.Error(),
 		})
 		return
 	}
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Payment created successfully",
+	})
+	return
 }

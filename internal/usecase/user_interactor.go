@@ -14,6 +14,6 @@ func (interactor *UserInteractor) GetInfo() []domain.Wari_user {
 	return interactor.UserRepository.Select()
 }
 
-func (interactor *UserInteractor) Delete(id string) {
+func (interactor *UserInteractor) Delete(id int) {
 	interactor.UserRepository.Delete(id)
 }

@@ -41,9 +41,17 @@ func (interactor *PaymentInteractor) CalcuratePayment(amount float64, members in
 	return amount / float64(members)
 }
 
-func (interactor *PaymentInteractor) ReCalcFinalPayment(groupId int) {
-	//グループIDを元に、グループ内の全ての支払い情報を取得
-	payments := interactor.WariPaymentRepository.SelectByGroupId(groupId)
+func (interactor *PaymentInteractor) ReCalcFinalPayment(groupId int) error {
+	//既存の最終支払テーブルのレコードを削除する
+	// if err := interactor.WariPaymentRepository.Delete(groupId); err != nil {
+	// 	return err
+	// }
 
-	return
+	//グループIDを元に、グループ内の全ての支払い情報を取得
+	reCalcFinalPaymentDtos := interactor.WariPaymentRepository.SelectPaymentAndLoanByGroupId(groupId)
+	if len(reCalcFinalPaymentDtos) == 0 {
+		return errors.New("no payment information found")
+	}
+
+	return nil
 }
