@@ -20,4 +20,3 @@ func (interactor *PaymentInteractor) CalucuratePayment(amount float64, members i
 	if members == 0 {
 		return 0
 	}
-	return amount / float64(members)
