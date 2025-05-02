@@ -14,10 +14,10 @@
 ```
 my-quarkus-app/docker配下でdocker-composeを使用する
 # コンテナの立ち上げ
-docker-compose up
+docker compose up
 
 # コンテナの停止
-docker-compose down
+docker compose down
 
 # コンテナ全削除
 docker compose down --volumes --rmi all --remove-orphans
