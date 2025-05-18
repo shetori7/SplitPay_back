@@ -29,10 +29,22 @@ func (handler *SqlHandler) Create(obj interface{}) {
 	handler.db.Create(obj)
 }
 
+func (handler *SqlHandler) FindById(obj interface{}, id int) {
+	handler.db.Where("id = ?", id).Find(obj)
+}
+
 func (handler *SqlHandler) FindAll(obj interface{}) {
 	handler.db.Find(obj)
 }
 
-func (handler *SqlHandler) DeleteById(obj interface{}, id string) {
-	handler.db.Delete(obj, id)
+func (handler *SqlHandler) DeleteById(obj interface{}, id int) error {
+	result := handler.db.Delete(obj, id)
+	if result.Error != nil {
+		return result.Error
+	}
+	return nil
+}
+
+func (handler *SqlHandler) Raw() *gorm.DB {
+	return handler.db
 }

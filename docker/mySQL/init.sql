@@ -18,32 +18,28 @@ CREATE TABLE IF NOT EXISTS wari_users (
     FOREIGN KEY (group_id) REFERENCES wari_groups(group_id),
     user_created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     user_updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-    FOREIGN KEY (wari_loans_from_user_id) REFERENCES wari_users(user_id)
-    wari_loans_amount DECIMAL(10, 2) NOT NULL,
 );
 
--- 支払いのテーブル（誰がいくら払ったか）
+-- 立替者の情報と支払額を保持するテーブル
 CREATE TABLE IF NOT EXISTS wari_payments (
     payment_id INT AUTO_INCREMENT PRIMARY KEY,
-    group_id INT,
-    user_id INT,
-    amount DECIMAL(10, 2) NOT NULL,
+    payer_group_id INT,
+    payer_user_id INT,
+    payer_amount DECIMAL(10, 2) NOT NULL,
     payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     message VARCHAR(255),
-    FOREIGN KEY (group_id) REFERENCES wari_groups(group_id),
-    FOREIGN KEY (user_id) REFERENCES wari_users(user_id)
+    FOREIGN KEY (payer_group_id) REFERENCES wari_groups(group_id),
+    FOREIGN KEY (payer_user_id) REFERENCES wari_users(user_id)
 );
 
--- 立替してもらった人のテーブル（誰がいくら立替えてもらったか）
+-- 立替してもらった人のテーブル
 CREATE TABLE IF NOT EXISTS wari_loans (
     loan_id INT AUTO_INCREMENT PRIMARY KEY,
     payment_id INT,
-    group_id INT,
-    to_user_id INT,
-    amount DECIMAL(10, 2) NOT NULL,
-    FOREIGN KEY (group_id) REFERENCES wari_groups(group_id),
+    payee_amount DECIMAL(10, 2) NOT NULL,
+    payee_user_id INT,
     FOREIGN KEY (payment_id) REFERENCES wari_payments(payment_id),
-    FOREIGN KEY (to_user_id) REFERENCES wari_users(user_id),
+    FOREIGN KEY (payee_user_id) REFERENCES wari_users(user_id)
 );
 
 -- 最終的な支払いのテーブル（誰がいくら払ったか、全方向に向きをもつ、正と負で向きを判断する）
@@ -56,7 +52,7 @@ CREATE TABLE IF NOT EXISTS wari_final_payments (
     amount DECIMAL(10, 2) NOT NULL,
     FOREIGN KEY (group_id) REFERENCES wari_groups(group_id),
     FOREIGN KEY (from_user_id) REFERENCES wari_users(user_id),
-    FOREIGN KEY (to_user_id) REFERENCES wari_users(user_id),
+    FOREIGN KEY (to_user_id) REFERENCES wari_users(user_id)
 );
 
 -- データの初期化

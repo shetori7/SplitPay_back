@@ -20,6 +20,6 @@ func (interactor *GroupInteractor) GetInfo() []domain.Wari_group {
 	return interactor.GroupRepository.Select()
 }
 
-func (interactor *GroupInteractor) Delete(id string) {
+func (interactor *GroupInteractor) Delete(id int) {
 	interactor.GroupRepository.Delete(id)
 }
