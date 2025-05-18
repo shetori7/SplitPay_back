@@ -9,6 +9,7 @@ import (
 
 	controllers "SplitPay_back/internal/interfaces/api"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -32,6 +33,8 @@ func Init() {
 	fmt.Println("Server Port:", cfg.ServerPort)
 
 	e := gin.Default()
+	e.Use(cors.Default())
+
 	e.GET("/", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"message": "hello world",
