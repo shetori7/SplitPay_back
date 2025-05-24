@@ -23,10 +23,8 @@ func (db *UserRepository) SelectByGroupId(groupUuid string) []dto.UserByGroupIdD
 	userByGroupIdDto := []dto.UserByGroupIdDto{}
 	db.Raw().Table("wari_users").
 		Select("wari_users.*", "wari_groups.*").
-		Joins("JOIN wari_groups ON wari_users.group_id = wari_groups.group_id").
 		Where("wari_users.group_uuid = ?", groupUuid).
 		Scan(&userByGroupIdDto)
-
 	return userByGroupIdDto
 }
 

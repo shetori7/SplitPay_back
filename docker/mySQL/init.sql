@@ -16,7 +16,6 @@ CREATE TABLE IF NOT EXISTS wari_users (
     group_id INT,
     group_uuid VARCHAR(50) NOT NULL,
     user_name VARCHAR(50) NOT NULL,
-    FOREIGN KEY (group_id) REFERENCES wari_groups(group_id),
     FOREIGN KEY (group_uuid) REFERENCES wari_groups(group_uuid),
     user_created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     user_updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP

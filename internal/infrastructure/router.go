@@ -58,10 +58,12 @@ func Init() {
 		c.JSON(http.StatusOK, users)
 	})
 
+	e.GET("/group/:groupUuId", func(c *gin.Context) {
+	})
 	e.POST("/group/new", func(c *gin.Context) {
 		//TODO:リクエストとdomainのマッピング箇所をひとまとめにしたい
 		g := groupController.Create(c)
-		users := userController.CreateMultiple(c, g.GroupId)
+		users := userController.CreateMultiple(c, g.GroupUuid)
 		c.JSON(http.StatusOK, gin.H{
 			"groupUuid": g.GroupUuid,
 			"groupName": g.GroupName,

@@ -32,7 +32,7 @@ func (controller *UserController) Create(c *gin.Context) {
 	c.JSON(201, createdUsers)
 }
 
-func (controller *UserController) CreateMultiple(c *gin.Context, groupId int) []domain.Wari_user {
+func (controller *UserController) CreateMultiple(c *gin.Context, groupUuId string) []domain.Wari_user {
 	var reqBody request.GraoupNewRequestBody
 	if value, exists := c.Get("request"); exists {
 		reqBody = value.(request.GraoupNewRequestBody)
@@ -40,7 +40,7 @@ func (controller *UserController) CreateMultiple(c *gin.Context, groupId int) []
 	userList := reqBody.Users
 	users := make([]domain.Wari_user, len(userList))
 	for i, userName := range userList {
-		users[i] = domain.Wari_user{UserName: userName, GroupId: groupId}
+		users[i] = domain.Wari_user{UserName: userName, GroupUuid: groupUuId}
 	}
 
 	for i := range users {

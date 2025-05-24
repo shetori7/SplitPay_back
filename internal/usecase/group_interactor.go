@@ -23,3 +23,11 @@ func (interactor *GroupInteractor) GetInfo() []domain.Wari_group {
 func (interactor *GroupInteractor) Delete(id int) {
 	interactor.GroupRepository.Delete(id)
 }
+
+func (interactor *GroupInteractor) GetInfoByGroupUuid(groupUuid string) domain.Wari_group {
+	group := interactor.GroupRepository.SelectByGroupUuid(groupUuid)
+	if group == nil {
+		return domain.Wari_group{}
+	}
+	return *group
+}
