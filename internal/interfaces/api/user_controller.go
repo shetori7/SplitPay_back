@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"SplitPay_back/internal/domain"
+	"SplitPay_back/internal/dto"
 	"SplitPay_back/internal/infrastructure/request"
 	"SplitPay_back/internal/interfaces/database"
 	"SplitPay_back/internal/usecase"
@@ -50,6 +51,20 @@ func (controller *UserController) CreateMultiple(c *gin.Context, groupId int) []
 
 func (controller *UserController) GetUser() []domain.Wari_user {
 	res := controller.Interactor.GetInfo()
+	return res
+}
+
+func (controller *UserController) GetUserByGroupId(c *gin.Context) []dto.UserByGroupIdDto {
+	var reqBody request.GetUserByGroupIdRequest
+	if err := c.ShouldBindJSON(&reqBody); err != nil {
+		c.JSON(404, gin.H{
+			"error": err.Error(),
+		})
+		return nil
+	}
+	groupUuid := reqBody.GroupUuid
+	c.Set("request", reqBody)
+	res := controller.Interactor.GetInfoByGroupId(groupUuid)
 	return res
 }
 

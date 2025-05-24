@@ -46,8 +46,14 @@ func Init() {
 	groupController := controllers.NewGroupController(NewSqlHandler(cfg))
 	paymentController := controllers.NewPaymentController(NewSqlHandler(cfg))
 
+	// e.GET("/users", func(c *gin.Context) {
+	// 	users := userController.GetUser()
+	// 	c.Bind(&users)
+	// 	c.JSON(http.StatusOK, users)
+	// })
+
 	e.GET("/users", func(c *gin.Context) {
-		users := userController.GetUser()
+		users := userController.GetUserByGroupId(c)
 		c.Bind(&users)
 		c.JSON(http.StatusOK, users)
 	})
