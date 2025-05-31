@@ -24,6 +24,8 @@ func (db *GroupRepository) Delete(id int) {
 func (db *GroupRepository) SelectByGroupUuid(groupUuid string) *domain.Wari_group {
 	group := &domain.Wari_group{}
 	db.Raw().Table("wari_groups").Where("group_uuid = ?", groupUuid).First(&group)
+	db.Raw().Table("wari_users").Where("group_uuid = ?", groupUuid).Find(&group.Users)
+
 	if group == nil {
 		return nil
 	}
