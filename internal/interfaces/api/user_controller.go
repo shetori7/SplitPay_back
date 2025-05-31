@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"SplitPay_back/internal/domain"
+	"SplitPay_back/internal/dto"
 	"SplitPay_back/internal/infrastructure/request"
 	"SplitPay_back/internal/interfaces/database"
 	"SplitPay_back/internal/usecase"
@@ -31,7 +32,7 @@ func (controller *UserController) Create(c *gin.Context) {
 	c.JSON(201, createdUsers)
 }
 
-func (controller *UserController) CreateMultiple(c *gin.Context, groupId int) []domain.Wari_user {
+func (controller *UserController) CreateMultiple(c *gin.Context, groupUuId string) []domain.Wari_user {
 	var reqBody request.GraoupNewRequestBody
 	if value, exists := c.Get("request"); exists {
 		reqBody = value.(request.GraoupNewRequestBody)
@@ -39,7 +40,7 @@ func (controller *UserController) CreateMultiple(c *gin.Context, groupId int) []
 	userList := reqBody.Users
 	users := make([]domain.Wari_user, len(userList))
 	for i, userName := range userList {
-		users[i] = domain.Wari_user{UserName: userName, GroupId: groupId}
+		users[i] = domain.Wari_user{UserName: userName, GroupUuid: groupUuId}
 	}
 
 	for i := range users {
@@ -50,6 +51,20 @@ func (controller *UserController) CreateMultiple(c *gin.Context, groupId int) []
 
 func (controller *UserController) GetUser() []domain.Wari_user {
 	res := controller.Interactor.GetInfo()
+	return res
+}
+
+func (controller *UserController) GetUserByGroupId(c *gin.Context) []dto.UserByGroupIdDto {
+	var reqBody request.GetUserByGroupIdRequest
+	if err := c.ShouldBindJSON(&reqBody); err != nil {
+		c.JSON(404, gin.H{
+			"error": err.Error(),
+		})
+		return nil
+	}
+	groupUuid := reqBody.GroupUuid
+	c.Set("request", reqBody)
+	res := controller.Interactor.GetInfoByGroupId(groupUuid)
 	return res
 }
 

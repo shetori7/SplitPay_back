@@ -2,7 +2,7 @@ package usecase
 
 import (
 	"SplitPay_back/internal/domain"
-	"SplitPay_back/internal/interfaces/database/dto"
+	"SplitPay_back/internal/dto"
 )
 
 type WariPaymentRepository interface {

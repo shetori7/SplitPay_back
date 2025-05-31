@@ -38,3 +38,17 @@ func (controller *GroupController) Create(c *gin.Context) domain.Wari_group {
 	controller.Interactor.Add(&g)
 	return g
 }
+
+func (controller *GroupController) GetGroupByUuId(c *gin.Context) domain.Wari_group {
+	var reqBody request.GetUserByGroupIdRequest
+	if err := c.ShouldBindJSON(&reqBody); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return domain.Wari_group{}
+	}
+	c.Set("request", reqBody)
+	groupUuId := reqBody.GroupUuid
+	users := controller.Interactor.GetInfoByGroupUuid(groupUuId)
+	return users
+}

@@ -46,16 +46,24 @@ func Init() {
 	groupController := controllers.NewGroupController(NewSqlHandler(cfg))
 	paymentController := controllers.NewPaymentController(NewSqlHandler(cfg))
 
+	// e.GET("/users", func(c *gin.Context) {
+	// 	users := userController.GetUser()
+	// 	c.Bind(&users)
+	// 	c.JSON(http.StatusOK, users)
+	// })
+
 	e.GET("/users", func(c *gin.Context) {
-		users := userController.GetUser()
+		users := userController.GetUserByGroupId(c)
 		c.Bind(&users)
 		c.JSON(http.StatusOK, users)
 	})
 
+	e.GET("/group/:groupUuId", func(c *gin.Context) {
+	})
 	e.POST("/group/new", func(c *gin.Context) {
 		//TODO:リクエストとdomainのマッピング箇所をひとまとめにしたい
 		g := groupController.Create(c)
-		users := userController.CreateMultiple(c, g.GroupId)
+		users := userController.CreateMultiple(c, g.GroupUuid)
 		c.JSON(http.StatusOK, gin.H{
 			"groupUuid": g.GroupUuid,
 			"groupName": g.GroupName,
