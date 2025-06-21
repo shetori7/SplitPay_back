@@ -72,10 +72,10 @@ func Init() {
 		g := groupController.Create(c)
 		users := userController.CreateMultiple(c, g.GroupUuid)
 		c.JSON(http.StatusOK, gin.H{
-			"groupUuid": g.GroupUuid,
-			"groupName": g.GroupName,
-			"message":   "group created successfully",
-			"users":     users,
+			"group_uuid": g.GroupUuid,
+			"group_name": g.GroupName,
+			"message":    "group created successfully",
+			"Users":      users,
 		})
 	})
 
