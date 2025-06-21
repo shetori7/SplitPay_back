@@ -83,5 +83,5 @@ func Init() {
 		paymentController.Create(c)
 	})
 
-	e.Run(":8000")
+	e.Run(cfg.ServerPort)
 }
