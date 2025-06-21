@@ -2,7 +2,7 @@ package dto
 
 type ReCalcFinalPaymentDto struct {
 	PaymentId    int     `gorm:"primaryKey;autoIncrement" json:"payment_id"`
-	PayerGroupId int     `json:"payer_group_id"`
+	PayerGroupId string  `json:"payer_group_id"`
 	PayerUserId  int     `json:"payer_user_id"`
 	PayerAmount  float64 `json:"amount"`
 	Payment_date string  `json:"payment_date"`
