@@ -74,7 +74,6 @@ func Init() {
 		c.JSON(http.StatusOK, gin.H{
 			"groupUuid": g.GroupUuid,
 			"groupName": g.GroupName,
-			"groupId":   g.GroupId,
 			"message":   "group created successfully",
 			"users":     users,
 		})
