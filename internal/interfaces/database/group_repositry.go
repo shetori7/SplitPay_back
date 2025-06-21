@@ -25,6 +25,7 @@ func (db *GroupRepository) SelectByGroupUuid(groupUuid string) *domain.Wari_grou
 	group := &domain.Wari_group{}
 	db.Raw().Table("wari_groups").Where("group_uuid = ?", groupUuid).First(&group)
 	db.Raw().Table("wari_users").Where("group_uuid = ?", groupUuid).Find(&group.Users)
+	db.Raw().Table("wari_final_payments").Where("group_uuid = ?", groupUuid).Find(&group.Payments)
 
 	if group == nil {
 		return nil
