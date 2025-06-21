@@ -3,9 +3,8 @@ USE waritomodb;
 
 -- グループテーブル
 CREATE TABLE IF NOT EXISTS wari_groups (
-    group_id INT AUTO_INCREMENT PRIMARY KEY,
     group_name VARCHAR(50) NOT NULL,
-    group_uuid VARCHAR(50) NOT NULL UNIQUE,
+    group_uuid VARCHAR(50) NOT NULL PRIMARY KEY,
     group_created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     group_updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
@@ -13,7 +12,6 @@ CREATE TABLE IF NOT EXISTS wari_groups (
 -- ユーザーテーブル
 CREATE TABLE IF NOT EXISTS wari_users (
     user_id INT AUTO_INCREMENT PRIMARY KEY,
-    group_id INT,
     group_uuid VARCHAR(50) NOT NULL,
     user_name VARCHAR(50) NOT NULL,
     FOREIGN KEY (group_uuid) REFERENCES wari_groups(group_uuid),
@@ -24,12 +22,12 @@ CREATE TABLE IF NOT EXISTS wari_users (
 -- 立替者の情報と支払額を保持するテーブル
 CREATE TABLE IF NOT EXISTS wari_payments (
     payment_id INT AUTO_INCREMENT PRIMARY KEY,
-    payer_group_id INT,
+    payer_group_id VARCHAR(50) NOT NULL,
     payer_user_id INT,
     payer_amount DECIMAL(10, 2) NOT NULL,
     payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     message VARCHAR(255),
-    FOREIGN KEY (payer_group_id) REFERENCES wari_groups(group_id),
+    FOREIGN KEY (payer_group_id) REFERENCES wari_groups(group_uuid),
     FOREIGN KEY (payer_user_id) REFERENCES wari_users(user_id)
 );
 
@@ -47,11 +45,11 @@ CREATE TABLE IF NOT EXISTS wari_loans (
 -- UPDATEで更新する
 CREATE TABLE IF NOT EXISTS wari_final_payments (
     final_payment_id INT AUTO_INCREMENT PRIMARY KEY,
-    group_id INT,
+    group_uuid VARCHAR(50) NOT NULL,
     from_user_id INT,
     to_user_id INT,
     amount DECIMAL(10, 2) NOT NULL,
-    FOREIGN KEY (group_id) REFERENCES wari_groups(group_id),
+    FOREIGN KEY (group_uuid) REFERENCES wari_groups(group_uuid),
     FOREIGN KEY (from_user_id) REFERENCES wari_users(user_id),
     FOREIGN KEY (to_user_id) REFERENCES wari_users(user_id)
 );
