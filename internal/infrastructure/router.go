@@ -58,8 +58,15 @@ func Init() {
 		c.JSON(http.StatusOK, users)
 	})
 
-	e.GET("/group/:groupUuId", func(c *gin.Context) {
+	e.GET("/group/getInfo", func(c *gin.Context) {
+		group := groupController.GetGroupByUuId(c)
+		if err != nil {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Group not found"})
+			return
+		}
+		c.JSON(http.StatusOK, group)
 	})
+
 	e.POST("/group/new", func(c *gin.Context) {
 		//TODO:リクエストとdomainのマッピング箇所をひとまとめにしたい
 		g := groupController.Create(c)
