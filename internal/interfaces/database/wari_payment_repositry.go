@@ -39,3 +39,10 @@ func (db *WariPaymentRepository) Delete(id int) error {
 	payments := []domain.Wari_payment{}
 	return db.DeleteById(&payments, id)
 }
+
+func (db *WariPaymentRepository) DeleteByUuid(groupUuid string) error {
+	payments := []domain.Wari_payment{}
+	result := db.Raw().Table("wari_final_payments").
+		Where("group_uuid = ?", groupUuid).Delete(&payments)
+	return result.Error
+}

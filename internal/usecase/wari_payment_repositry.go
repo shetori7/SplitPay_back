@@ -10,5 +10,6 @@ type WariPaymentRepository interface {
 	SelectByGroupId(groupId int) []domain.Wari_payment
 	Select() []domain.Wari_payment
 	Delete(id int) error
+	DeleteByUuid(groupUuid string) error
 	SelectPaymentAndLoanByGroupId(groupUuid string) []dto.ReCalcFinalPaymentDto
 }

@@ -61,9 +61,9 @@ func (interactor *PaymentInteractor) ReCalcFinalPayment(groupUuid string) error 
 	//構造体の初期化
 	balances = make(map[int]float64)
 	//既存の最終支払テーブルのレコードを削除する
-	// if err := interactor.WariPaymentRepository.Delete(groupId); err != nil {
-	// 	return err
-	// }
+	if err := interactor.WariPaymentRepository.DeleteByUuid(groupUuid); err != nil {
+		return err
+	}
 
 	//グループIDを元に、グループ内の全ての支払い情報を取得
 	reCalcFinalPaymentDtos := interactor.WariPaymentRepository.SelectPaymentAndLoanByGroupId(groupUuid)
