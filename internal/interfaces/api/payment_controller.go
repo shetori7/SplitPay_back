@@ -37,9 +37,9 @@ func (controller *PaymentContlloer) Create(c *gin.Context) {
 		return
 	}
 
-	addErr := controller.Interactor.Add(reqBody.GroupId, reqBody.PayerId, reqBody.Amount, reqBody.ParticipantIds)
+	addErr := controller.Interactor.Add(reqBody.GroupUuid, reqBody.PayerId, reqBody.Amount, reqBody.ParticipantIds)
 	errors = multierror.Append(errors, addErr)
-	reCalcErr := controller.Interactor.ReCalcFinalPayment(reqBody.GroupId)
+	reCalcErr := controller.Interactor.ReCalcFinalPayment(reqBody.GroupUuid)
 	errors = multierror.Append(errors, reCalcErr)
 
 	if finalErr := errors.(*multierror.Error).ErrorOrNil(); finalErr != nil {

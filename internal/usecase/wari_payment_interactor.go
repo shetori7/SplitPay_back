@@ -12,9 +12,9 @@ type PaymentInteractor struct {
 	WariLoanRepository    WariLoanRepository
 }
 
-func (interactor *PaymentInteractor) Add(groupId int, payerId int, amount float64, participantIds []int) error {
+func (interactor *PaymentInteractor) Add(groupUuid string, payerId int, amount float64, participantIds []int) error {
 	wp := domain.Wari_payment{
-		PayerGroupId: groupId,
+		PayerGroupId: groupUuid,
 		PayerUserId:  payerId,
 		PayerAmount:  amount,
 	}
@@ -48,7 +48,7 @@ func (interactor *PaymentInteractor) CalcuratePayment(amount float64, members in
 	return amount / float64(members)
 }
 
-func (interactor *PaymentInteractor) ReCalcFinalPayment(groupId int) error {
+func (interactor *PaymentInteractor) ReCalcFinalPayment(groupUuid string) error {
 	//精算額を計算するための構造体
 	type PersonBalance struct {
 		userId int
@@ -66,7 +66,7 @@ func (interactor *PaymentInteractor) ReCalcFinalPayment(groupId int) error {
 	// }
 
 	//グループIDを元に、グループ内の全ての支払い情報を取得
-	reCalcFinalPaymentDtos := interactor.WariPaymentRepository.SelectPaymentAndLoanByGroupId(groupId)
+	reCalcFinalPaymentDtos := interactor.WariPaymentRepository.SelectPaymentAndLoanByGroupId(groupUuid)
 	if len(reCalcFinalPaymentDtos) == 0 {
 		return errors.New("no payment information found")
 	}

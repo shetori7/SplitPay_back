@@ -19,12 +19,12 @@ func (db *WariPaymentRepository) SelectByGroupId(groupId int) []domain.Wari_paym
 	return payments
 }
 
-func (db *WariPaymentRepository) SelectPaymentAndLoanByGroupId(groupId int) []dto.ReCalcFinalPaymentDto {
+func (db *WariPaymentRepository) SelectPaymentAndLoanByGroupId(groupUuid string) []dto.ReCalcFinalPaymentDto {
 	reCalcFinalPaymentDtos := []dto.ReCalcFinalPaymentDto{}
 	db.Raw().Table("wari_payments").
 		Select("wari_payments.*, wari_loans.*").
 		Joins("JOIN wari_loans ON wari_payments.payment_id = wari_loans.payment_id").
-		Where("wari_payments.payer_group_id = ?", groupId).
+		Where("wari_payments.payer_group_id = ?", groupUuid).
 		Scan(&reCalcFinalPaymentDtos)
 	return reCalcFinalPaymentDtos
 }
