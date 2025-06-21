@@ -3,13 +3,13 @@ package usecase
 import (
 	"SplitPay_back/internal/domain"
 	"errors"
-	"fmt"
 	"sort"
 )
 
 type PaymentInteractor struct {
-	WariPaymentRepository WariPaymentRepository
-	WariLoanRepository    WariLoanRepository
+	WariPaymentRepository      WariPaymentRepository
+	WariLoanRepository         WariLoanRepository
+	WariFinalPaymentRepository WariFinalPaymentRepository
 }
 
 func (interactor *PaymentInteractor) Add(groupUuid string, payerId int, amount float64, participantIds []int) error {
@@ -93,6 +93,10 @@ func (interactor *PaymentInteractor) ReCalcFinalPayment(groupUuid string) error 
 		return creditors[i].Amount > creditors[j].Amount
 	})
 
+	// 結果を格納するスライスを宣言
+
+	var finalPayments []*domain.WariFinalPayment
+
 	i, j := 0, 0
 	for i < len(debtors) && j < len(creditors) {
 		debtor := &debtors[i]
@@ -100,7 +104,15 @@ func (interactor *PaymentInteractor) ReCalcFinalPayment(groupUuid string) error 
 
 		payment := min(-debtor.Amount, creditor.Amount)
 
-		fmt.Println("支払う人:", debtor.userId, "受け取る人:", creditor.userId, "金額:", payment)
+		// 結果を構造体に保持する
+		finalPayment := domain.WariFinalPayment{
+			GroupUuid:  groupUuid,
+			FromUserId: debtor.userId,
+			ToUserId:   creditor.userId,
+			Amount:     payment,
+		}
+
+		finalPayments = append(finalPayments, &finalPayment)
 		debtor.Amount += payment
 		creditor.Amount -= payment
 
@@ -112,5 +124,6 @@ func (interactor *PaymentInteractor) ReCalcFinalPayment(groupUuid string) error 
 		}
 	}
 
+	interactor.WariFinalPaymentRepository.StoreAll(finalPayments)
 	return nil
 }

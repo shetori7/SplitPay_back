@@ -23,6 +23,9 @@ func NewPaymentController(sqlHandler database.SqlHandler) *PaymentContlloer {
 			WariLoanRepository: &database.WariLoanRepository{
 				SqlHandler: sqlHandler,
 			},
+			WariFinalPaymentRepository: &database.WariFinalPaymentRepository{
+				SqlHandler: sqlHandler,
+			},
 		},
 	}
 }
