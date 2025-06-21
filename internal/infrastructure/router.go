@@ -35,53 +35,52 @@ func Init() {
 	e := gin.Default()
 	e.Use(cors.Default())
 
-	e.GET("/", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "hello world",
-		})
-	})
-
 	//Controllerを作成
 	userController := controllers.NewUserController(NewSqlHandler(cfg))
 	groupController := controllers.NewGroupController(NewSqlHandler(cfg))
 	paymentController := controllers.NewPaymentController(NewSqlHandler(cfg))
 
-	// e.GET("/users", func(c *gin.Context) {
-	// 	users := userController.GetUser()
-	// 	c.Bind(&users)
-	// 	c.JSON(http.StatusOK, users)
-	// })
+	// APIのルーティングを設定
+	api := e.Group("/api")
 
-	e.GET("/users", func(c *gin.Context) {
-		users := userController.GetUserByGroupId(c)
-		c.Bind(&users)
-		c.JSON(http.StatusOK, users)
-	})
+	{
+		// e.GET("/users", func(c *gin.Context) {
+		// 	users := userController.GetUser()
+		// 	c.Bind(&users)
+		// 	c.JSON(http.StatusOK, users)
+		// })
 
-	e.GET("/group/getInfo", func(c *gin.Context) {
-		group := groupController.GetGroupByUuId(c)
-		if err != nil {
-			c.JSON(http.StatusNotFound, gin.H{"error": "Group not found"})
-			return
-		}
-		c.JSON(http.StatusOK, group)
-	})
-
-	e.POST("/group/new", func(c *gin.Context) {
-		//TODO:リクエストとdomainのマッピング箇所をひとまとめにしたい
-		g := groupController.Create(c)
-		users := userController.CreateMultiple(c, g.GroupUuid)
-		c.JSON(http.StatusOK, gin.H{
-			"group_uuid": g.GroupUuid,
-			"group_name": g.GroupName,
-			"message":    "group created successfully",
-			"Users":      users,
+		api.GET("/users", func(c *gin.Context) {
+			users := userController.GetUserByGroupId(c)
+			c.Bind(&users)
+			c.JSON(http.StatusOK, users)
 		})
-	})
 
-	e.POST(("/payment/new"), func(c *gin.Context) {
-		paymentController.Create(c)
-	})
+		api.GET("/group/getInfo", func(c *gin.Context) {
+			group := groupController.GetGroupByUuId(c)
+			if err != nil {
+				c.JSON(http.StatusNotFound, gin.H{"error": "Group not found"})
+				return
+			}
+			c.JSON(http.StatusOK, group)
+		})
 
-	e.Run(cfg.ServerPort)
+		api.POST("/group/new", func(c *gin.Context) {
+			//TODO:リクエストとdomainのマッピング箇所をひとまとめにしたい
+			g := groupController.Create(c)
+			users := userController.CreateMultiple(c, g.GroupUuid)
+			c.JSON(http.StatusOK, gin.H{
+				"group_uuid": g.GroupUuid,
+				"group_name": g.GroupName,
+				"message":    "group created successfully",
+				"Users":      users,
+			})
+		})
+
+		api.POST(("/payment/new"), func(c *gin.Context) {
+			paymentController.Create(c)
+		})
+	}
+
+	e.Run(":" + cfg.ServerPort)
 }
