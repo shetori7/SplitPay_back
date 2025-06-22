@@ -45,3 +45,67 @@ SET global general_log = 'ON';
 SHOW VARIABLES LIKE 'general_log_file';
 tail -f /var/lib/mysql/$(hostname).log
 ```
+### 本番環境について
+* サーバー情報
+```
+WebサーバーとAPサーバーは同一サーバーでまかなう
+OCI（オラクルクラウドの無料プランを使用している）
+
+##WebAPサーバー
+public IP：150.230.195.18
+private IP：10.0.1.175
+アカウント：walipay
+
+##DBサーバー
+public IP：なし
+private IP：10.0.2.25
+アカウント：walipay
+その他DB設定については当プロジェクト内のprod.envを参照すること
+```
+
+* 接続方法
+```
+##WebAPサーバーへはSSHで接続を行うこと（秘密鍵の位置は適宜変えること）
+ssh -i ~/.ssh/id_rsa opc@150.230.195.18
+
+##DBサーバーへの接続
+APサーバーでopcユーザーでログイン後/home/opc内に接続用スクリプトがある
+```
+
+* デプロイ方法
+```
+##フロントエンド
+0.WebAPサーバーにSSHでログインする
+
+1.ユーザーの切り替え
+sudo su walipay
+
+2.ディレクトリ移動し、シェルを実行する
+cd /opt/walipay/src
+./build_frontend.sh
+
+3.ユーザーを切り替えてサービスを再起動
+exit
+sudo systemctl restart addpay_frontend.service
+
+##バックエンド
+0.WebAPサーバーにSSHでログインする
+
+1.ユーザーの切り替え
+sudo su walipay
+
+2.ディレクトリ移動し、シェルを実行する
+cd /opt/walipay/src
+./build_backend.sh
+
+3.ユーザーを切り替えてサービスを再起動
+exit
+sudo systemctl restart addpay_backend.service
+
+##Nginx
+Nginxの設定ファイルを編集した際はNginxサービスの再起動を行うこと
+1.opcユーザーになる
+
+2.Nginxの再起動
+sudo systemctl restart nginx
+```
