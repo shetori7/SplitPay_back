@@ -33,7 +33,13 @@ func Init() {
 	fmt.Println("Server Port:", cfg.ServerPort)
 
 	e := gin.Default()
-	e.Use(cors.Default())
+	e.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"*"}, // 必要に応じて本番用のドメインに変更
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+	}))
 
 	//Controllerを作成
 	userController := controllers.NewUserController(NewSqlHandler(cfg))
