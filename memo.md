@@ -45,7 +45,7 @@ SET global general_log = 'ON';
 SHOW VARIABLES LIKE 'general_log_file';
 tail -f /var/lib/mysql/$(hostname).log
 ```
-### 本番環境について
+### 本番環境について（http://150.230.195.18/）
 * サーバー情報
 ```
 WebサーバーとAPサーバーは同一サーバーでまかなう
