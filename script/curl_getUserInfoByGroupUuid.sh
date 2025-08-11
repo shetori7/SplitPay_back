@@ -1,1 +1,1 @@
-curl --location --request GET 'http://localhost:8000/group/getInfo?groupUuId=0b6c7d11-0cba-4bc0-a9ee-f5b591a3508a'
+curl --location --request GET 'http://localhost:8000/group/getInfo?groupUuId=1e6821e6-44db-4539-9b0b-16d8bfa002be'
